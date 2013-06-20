@@ -1,9 +1,9 @@
 var board;
 
 
-function createBoard(xLength, yLength)
+function createBoard()
 {
-	board = new Board(xLength, yLength);
+	board = new Board(8, 8);
 }
 
 
@@ -42,6 +42,13 @@ function measureBoard()
 }
 
 
+function resetBoard()
+{
+	createBoard();
+	board.flush();
+}
+
+
 function selectBoardPosition(position)
 {
 	var x = Math.round(position.getAttribute("data-x"));
@@ -61,6 +68,12 @@ function Board(xLength, yLength)
 }
 
 
+Board.prototype.flush = function()
+{
+
+}
+
+
 Board.prototype.placeBombs = function()
 {
 
@@ -71,11 +84,11 @@ Board.prototype.preparePositions = function()
 {
 	this.positions = new Array(this.xLength);
 
-	for (var x = 0; x < xLength; ++x)
+	for (var x = 0; x < this.xLength; ++x)
 	{
 		this.positions[x] = new Array(this.yLength);
 
-		for (var y = 0; y < yLength; ++y)
+		for (var y = 0; y < this.yLength; ++y)
 		{
 			this.positions[x][y] = new Position(x, y);
 		}
