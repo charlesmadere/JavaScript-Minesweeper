@@ -1,17 +1,24 @@
 var board;
 
 
-function createBoard()
+function cheatBoard()
 {
-	board = new Board(8, 8);
+
+}
+
+
+function findBoardPosition(coordinate)
+{
+	return $("[data-x=" + coordinate.x + "][data-y=" + coordinate.y + "]");
 }
 
 
 function measureBoard()
 {
-	var board = $("#board");
 	var body = $("body");
 	var bodyWidth = body.width();
+
+	var board = $("#board");
 	board.height(bodyWidth);
 	board.width(bodyWidth);
 
@@ -21,30 +28,14 @@ function measureBoard()
 	for (var i = 0; i < rows.length; ++i)
 	{
 		var row = rows[i];
-
-		if (row.className === "boardRow")
-		{
-			row.style.height = rowHeight + "px";
-			var positions = row.childNodes;
-
-			for (var j = 0; j < positions.length; ++j)
-			{
-				var position = positions[j];
-				var piece = position.childNodes;
-
-				for (var k = 0; k < piece.length; ++k)
-				{
-					var pieceImage = piece[k];
-				}
-			}
-		}
+		row.style.height = rowHeight + "px";
 	}
 }
 
 
-function resetBoard()
+function newBoard()
 {
-	createBoard();
+	board = new Board(8, 8);
 	board.flush();
 }
 
@@ -54,7 +45,13 @@ function selectBoardPosition(position)
 	var x = Math.round(position.getAttribute("data-x"));
 	var y = Math.round(position.getAttribute("data-y"));
 	var coordinate = new Coordinate(x, y);
-	alert(coordinate.x + " " + coordinate.y);
+	var positionElement = findBoardPosition(coordinate);
+}
+
+
+function validateBoard()
+{
+
 }
 
 
@@ -63,24 +60,13 @@ function Board(xLength, yLength)
 	this.xLength = xLength;
 	this.yLength = yLength;
 
-	this.preparePositions();
+	this.createPositions();
 	this.placeBombs();
+	this.setPositionValues();
 }
 
 
-Board.prototype.flush = function()
-{
-
-}
-
-
-Board.prototype.placeBombs = function()
-{
-
-}
-
-
-Board.prototype.preparePositions = function()
+Board.prototype.createPositions = function()
 {
 	this.positions = new Array(this.xLength);
 
@@ -93,4 +79,30 @@ Board.prototype.preparePositions = function()
 			this.positions[x][y] = new Position(x, y);
 		}
 	}
+}
+
+
+Board.prototype.flush = function()
+{
+	for (var x = 0; x < this.xLength; ++x)
+	{
+		for (var y = 0; y < this.yLength; ++y)
+		{
+			var coordinate = new Coordinate(x, y);
+			var positionElement = findBoardPosition(coordinate);
+			positionElement.html(coordinate.x);
+		}
+	}
+}
+
+
+Board.prototype.placeBombs = function()
+{
+
+}
+
+
+Board.prototype.setPositionValues = function()
+{
+
 }

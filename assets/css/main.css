@@ -11,7 +11,7 @@ body
 h1
 {
 	font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-	font-size: 3em;
+	font-size: 3.25em;
 	font-weight: lighter;
 	margin-bottom: 0.75em;
 	margin-top: 0.25em;
@@ -36,7 +36,8 @@ h1
 {
 	box-shadow: 0em 0em 0.25em #000000;
 	float: left;
-	font-family: Consolas, Menlo, "Courier New", Courier, monospace;
+	font-family: Menlo, Consolas, "Courier New", Courier, monospace;
+	font-size: 2em;
 	height: 100%;
 	text-align: center;
 	width: 12.5%;
@@ -64,6 +65,8 @@ h1
 button
 {
 	font-size: 1em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
 	padding: 0.25em 1em;
 	text-transform: uppercase;
 }
