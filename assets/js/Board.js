@@ -7,9 +7,34 @@ function cheatBoard()
 }
 
 
+function clickBoardPosition(position)
+{
+	var x = Math.round(position.getAttribute("data-x"));
+	var y = Math.round(position.getAttribute("data-y"));
+	var coordinate = new Coordinate(x, y);
+
+	board.clickPosition(coordinate);
+}
+
+
 function findBoardPosition(coordinate)
 {
 	return $("[data-x=" + coordinate.x + "][data-y=" + coordinate.y + "]");
+}
+
+
+function flagToggle()
+{
+	board.areFlagsEnabled = !board.areFlagsEnabled;
+
+	if (board.areFlagsEnabled)
+	{
+		$("#flagToggle").html("Flags: On");
+	}
+	else
+	{
+		$("#flagToggle").html("Flags: Off");
+	}
 }
 
 
@@ -40,15 +65,6 @@ function newBoard()
 }
 
 
-function selectBoardPosition(position)
-{
-	var x = Math.round(position.getAttribute("data-x"));
-	var y = Math.round(position.getAttribute("data-y"));
-	var coordinate = new Coordinate(x, y);
-	var positionElement = findBoardPosition(coordinate);
-}
-
-
 function validateBoard()
 {
 
@@ -60,9 +76,31 @@ function Board(xLength, yLength)
 	this.xLength = xLength;
 	this.yLength = yLength;
 
+	this.areFlagsEnabled = false;
+
 	this.createPositions();
 	this.placeBombs();
 	this.setPositionValues();
+}
+
+
+Board.prototype.clickPosition = function(coordinate)
+{
+	var position = this.positions[coordinate.x][coordinate.y];
+
+	if (!position.hasBeenClicked)
+	{
+		if (this.areFlagsEnabled)
+		{
+			position.placeFlag();
+		}
+		else
+		{
+			position.setClicked();
+		}
+	}
+
+	this.flush();
 }
 
 
@@ -88,9 +126,34 @@ Board.prototype.flush = function()
 	{
 		for (var y = 0; y < this.yLength; ++y)
 		{
+			var position = this.positions[x][y];
 			var coordinate = new Coordinate(x, y);
 			var positionElement = findBoardPosition(coordinate);
-			positionElement.html(coordinate.x);
+
+			positionElement.html("");
+
+			if (position.hasBeenClicked)
+			{
+				positionElement.addClass("boardPositionClicked");
+
+				if (position.hasBomb)
+				{
+					positionElement.addClass("boardBomb");
+					positionElement.html("B");
+				}
+				else
+				{
+					positionElement.html(position.number);
+				}
+			}
+			else
+			{
+				if (position.hasFlag)
+				{
+					positionElement.addClass("boardFlag");
+					positionElement.html("F");
+				}
+			}
 		}
 	}
 }
@@ -98,7 +161,19 @@ Board.prototype.flush = function()
 
 Board.prototype.placeBombs = function()
 {
+	var bombsToPlace = 10;
 
+	while (bombsToPlace >= 1)
+	{
+		var x = Math.floor(Math.random() * 8);
+		var y = Math.floor(Math.random() * 8);
+
+		if (!this.positions[x][y].hasBomb)
+		{
+			this.positions[x][y].placeBomb();
+			--bombsToPlace;
+		}
+	}
 }
 
 

@@ -1,7 +1,7 @@
 body
 {
-	background-color: #EEEEEE;
-	color: #666666;
+	background-color: #CCCCCC;
+	color: #444444;
 	font-family: Calibri, Helvetica, Arial, sans-serif;
 	margin: 0em auto;
 	max-width: 40em;
@@ -47,6 +47,24 @@ h1
 .boardPosition:hover
 {
 	background-color: #DDDDDD;
+}
+
+
+.boardPositionClicked
+{
+	background-color: #EEEEEE;
+}
+
+
+.boardBomb
+{
+	color: #FF0000;
+}
+
+
+.boardFlag
+{
+	color: #00FF00;
 }
 
 
