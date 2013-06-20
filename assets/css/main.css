@@ -1,0 +1,54 @@
+body
+{
+	background-color: #EEEEEE;
+	color: #666666;
+	font-family: Calibri, Helvetica, Arial, sans-serif;
+	margin: 0em auto;
+	max-width: 40em;
+}
+
+
+h1
+{
+	font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+	font-size: 3em;
+	font-weight: lighter;
+	margin-bottom: 0.75em;
+	margin-top: 0.25em;
+	text-align: center;
+}
+
+
+#board
+{
+	background-color: #FFFFFF;
+}
+
+
+.boardRow
+{
+	width: 100%;
+}
+
+
+.boardPosition
+{
+	box-shadow: 0em 0em 0.25em #000000;
+	float: left;
+	font-family: Consolas, Menlo, "Courier New", Courier, monospace;
+	height: 100%;
+	text-align: center;
+	width: 12.5%;
+}
+
+
+.boardPosition:hover
+{
+	background-color: #DDDDDD;
+}
+
+
+.clear
+{
+	clear: both;
+}
