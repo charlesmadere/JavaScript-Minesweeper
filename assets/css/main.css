@@ -64,7 +64,7 @@ h1
 
 .boardFlag
 {
-	color: #00FF00;
+	color: #00AA00;
 }
 
 
@@ -82,9 +82,10 @@ h1
 
 button
 {
+	font-family: "Segoe UI", Helvetica, Arial, sans-serif;
 	font-size: 1em;
+	font-weight: lighter;
 	margin-left: 0.25em;
 	margin-right: 0.25em;
 	padding: 0.25em 1em;
-	text-transform: uppercase;
 }

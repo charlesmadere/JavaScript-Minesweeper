@@ -15,13 +15,8 @@ Position.prototype.placeBomb = function()
 }
 
 
-Position.prototype.placeFlag = function()
+Position.prototype.setClicked = function(areFlagsEnabled)
 {
-	this.hasFlag = true;
-}
-
-
-Position.prototype.setClicked = function()
-{
+	this.hasFlag = areFlagsEnabled;
 	this.hasBeenClicked = true;
 }

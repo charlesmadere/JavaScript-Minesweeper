@@ -7,5 +7,5 @@ $(document).ready(function()
 
 function gameIsNowOver()
 {
-	alert("You lost the game!");
+	alert("You lost the game! Click \"New Game\" below to start a new game.");
 }

@@ -86,7 +86,7 @@ function validateBoard()
 {
 	if (!board.isGameOver)
 	{
-
+		board.validateBoard();
 	}
 }
 
@@ -133,11 +133,15 @@ Board.prototype.clickPosition = function(coordinate)
 		{
 			if (this.areFlagsEnabled)
 			{
-				position.placeFlag();
+				position.setClicked(true);
 			}
 			else
 			{
-				position.setClicked();
+				position.setClicked(false);
+
+				// TODO
+				// perform clicks on all adjacent positions that don't have a
+				// bomb
 			}
 		}
 
@@ -297,15 +301,21 @@ Board.prototype.regularFlush = function(position, positionElement)
 		}
 		else
 		{
-			positionElement.html(position.nearbyBombs);
+			if (position.hasFlag)
+			{
+				positionElement.addClass("boardFlag");
+				positionElement.html("F");
+			}
+			else
+			{
+				positionElement.html(position.nearbyBombs);
+			}
 		}
 	}
-	else
-	{
-		if (position.hasFlag)
-		{
-			positionElement.addClass("boardFlag");
-			positionElement.html("F");
-		}
-	}
+}
+
+
+Board.prototype.validate = function()
+{
+
 }
