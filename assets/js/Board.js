@@ -3,7 +3,7 @@ var board;
 
 function cheatToggle()
 {
-	if (!board.isGameOver)
+	if (!board.isGameOver && !board.areFlagsEnabled)
 	{
 		board.isCheatEnabled = !board.isCheatEnabled;
 
@@ -39,7 +39,7 @@ function findBoardPosition(coordinate)
 
 function flagToggle()
 {
-	if (!board.isGameOver)
+	if (!board.isGameOver && !board.isCheatEnabled)
 	{
 		board.areFlagsEnabled = !board.areFlagsEnabled;
 
@@ -86,7 +86,7 @@ function validateBoard()
 {
 	if (!board.isGameOver)
 	{
-		board.validateBoard();
+		board.validate();
 	}
 }
 
@@ -99,6 +99,7 @@ function Board(xLength, yLength)
 	this.areFlagsEnabled = false;
 	this.isCheatEnabled = false;
 	this.isGameOver = false;
+	this.totalBombsOnBoard = 10;
 
 	$("#flagToggle").html("Flags: Off");
 	$("#cheatToggle").html("Cheat: Off");
@@ -294,18 +295,24 @@ Board.prototype.flush = function()
 }
 
 
-Board.prototype.gameIsNowOver = function()
+Board.prototype.gameWasLost = function()
 {
 	this.isGameOver = true;
 	this.isCheatEnabled = true;
 	this.flush();
-	gameIsNowOver();
+	gameWasLost();
+}
+
+
+Board.prototype.gameWasWon = function()
+{
+	gameWasWon();
 }
 
 
 Board.prototype.placeBombs = function()
 {
-	var bombsToPlace = 10;
+	var bombsToPlace = this.totalBombsOnBoard;
 
 	while (bombsToPlace >= 1)
 	{
@@ -338,7 +345,7 @@ Board.prototype.regularFlush = function(position, positionElement)
 			{
 				positionElement.addClass("boardBomb");
 				positionElement.html("B");
-				this.gameIsNowOver();
+				this.gameWasLost();
 			}
 			else
 			{
@@ -351,5 +358,23 @@ Board.prototype.regularFlush = function(position, positionElement)
 
 Board.prototype.validate = function()
 {
+	var flaggedBombs = 0;
 
+	for (var x = 0; x < this.xLength; ++x)
+	{
+		for (var y = 0; y < this.yLength; ++y)
+		{
+			var position = this.positions[x][y];
+
+			if (position.hasFlag && position.hasBomb)
+			{
+				++flaggedBombs;
+			}
+		}
+	}
+
+	if (flaggedBombs == this.totalBombsOnBoard)
+	{
+		this.gameWasWon();
+	}
 }

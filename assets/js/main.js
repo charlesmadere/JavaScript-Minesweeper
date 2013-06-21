@@ -5,7 +5,13 @@ $(document).ready(function()
 });
 
 
-function gameIsNowOver()
+function gameWasLost()
 {
 	alert("You lost the game! Click \"New Game\" below to start a new game.");
+}
+
+
+function gameWasWon()
+{
+	alert("You won the game! Click \"New Game\" below to start a new game.");
 }
