@@ -100,6 +100,7 @@ function Board(xLength, yLength)
 	this.isCheatEnabled = false;
 	this.isGameOver = false;
 
+	$("#flagToggle").html("Flags: Off");
 	$("#cheatToggle").html("Cheat: Off");
 
 	this.createPositions();
