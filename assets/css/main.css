@@ -13,9 +13,22 @@ h1
 	font-family: "Segoe UI", Helvetica, Arial, sans-serif;
 	font-size: 3.25em;
 	font-weight: lighter;
-	margin-bottom: 0.75em;
+	margin-bottom: 0.25em;
 	margin-top: 0.25em;
 	text-align: center;
+}
+
+
+h2
+{
+	font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+	font-size: 1.25em;
+	font-weight: lighter;
+	letter-spacing: 0.05em;
+	margin-bottom: 1em;
+	margin-top: 0em;
+	text-align: center;
+	text-transform: uppercase;
 }
 
 
