@@ -130,13 +130,13 @@ Board.prototype.clickPosition = function(coordinate)
 	{
 		var position = this.positions[coordinate.x][coordinate.y];
 
-		if (!position.hasBeenClicked)
+		if (this.areFlagsEnabled)
 		{
-			if (this.areFlagsEnabled)
-			{
-				position.setClicked(true);
-			}
-			else if (position.nearbyBombs == 0)
+			position.flagToggle();
+		}
+		else if (!position.hasBeenClicked)
+		{
+			if (position.nearbyBombs == 0)
 			{
 				var bomblessAdjacentPositions = new Array();
 				bomblessAdjacentPositions.push(position);
@@ -147,7 +147,7 @@ Board.prototype.clickPosition = function(coordinate)
 					var x = position.coordinate.x;
 					var y = position.coordinate.y;
 
-					position.setClicked(false);
+					position.setClicked();
 
 					if (position.nearbyBombs == 0)
 					{
@@ -176,7 +176,7 @@ Board.prototype.clickPosition = function(coordinate)
 			}
 			else
 			{
-				position.setClicked(false);
+				position.setClicked();
 			}
 		}
 
@@ -306,6 +306,9 @@ Board.prototype.gameWasLost = function()
 
 Board.prototype.gameWasWon = function()
 {
+	this.isGameOver = true;
+	this.isCheatEnabled = true;
+	this.flush();
 	gameWasWon();
 }
 

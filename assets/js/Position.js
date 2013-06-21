@@ -9,14 +9,20 @@ function Position(x, y)
 }
 
 
+Position.prototype.flagToggle = function()
+{
+	this.hasBeenClicked = !this.hasBeenClicked;
+	this.hasFlag = !this.hasFlag;
+}
+
+
 Position.prototype.placeBomb = function()
 {
 	this.hasBomb = true;
 }
 
 
-Position.prototype.setClicked = function(areFlagsEnabled)
+Position.prototype.setClicked = function()
 {
-	this.hasFlag = areFlagsEnabled;
 	this.hasBeenClicked = true;
 }
