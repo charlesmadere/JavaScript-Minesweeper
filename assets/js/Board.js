@@ -135,13 +135,47 @@ Board.prototype.clickPosition = function(coordinate)
 			{
 				position.setClicked(true);
 			}
+			else if (position.nearbyBombs == 0)
+			{
+				var bomblessAdjacentPositions = new Array();
+				bomblessAdjacentPositions.push(position);
+
+				do
+				{
+					position = bomblessAdjacentPositions.pop();
+					var x = position.coordinate.x;
+					var y = position.coordinate.y;
+
+					position.setClicked(false);
+
+					if (position.nearbyBombs == 0)
+					{
+						if (x + 1 < this.xLength && !this.positions[x + 1][y].hasBeenClicked && !this.positions[x + 1][y].hasBomb)
+						{
+							bomblessAdjacentPositions.push(this.positions[x + 1][y]);
+						}
+
+						if (x - 1 >= 0 && !this.positions[x - 1][y].hasBeenClicked && !this.positions[x - 1][y].hasBomb)
+						{
+							bomblessAdjacentPositions.push(this.positions[x - 1][y]);
+						}
+
+						if (y + 1 < this.yLength && !this.positions[x][y + 1].hasBeenClicked && !this.positions[x][y + 1].hasBomb)
+						{
+							bomblessAdjacentPositions.push(this.positions[x][y + 1]);
+						}
+
+						if (y - 1 >= 0 && !this.positions[x][y - 1].hasBeenClicked && !this.positions[x][y - 1].hasBomb)
+						{
+							bomblessAdjacentPositions.push(this.positions[x][y - 1]);
+						}
+					}
+				}
+				while (bomblessAdjacentPositions.length >= 1);
+			}
 			else
 			{
 				position.setClicked(false);
-
-				// TODO
-				// perform clicks on all adjacent positions that don't have a
-				// bomb
 			}
 		}
 
@@ -293,18 +327,18 @@ Board.prototype.regularFlush = function(position, positionElement)
 	{
 		positionElement.addClass("boardPositionClicked");
 
-		if (position.hasBomb)
+		if (position.hasFlag)
 		{
-			positionElement.addClass("boardBomb");
-			positionElement.html("B");
-			this.gameIsNowOver();
+			positionElement.addClass("boardFlag");
+			positionElement.html("F");
 		}
 		else
 		{
-			if (position.hasFlag)
+			if (position.hasBomb)
 			{
-				positionElement.addClass("boardFlag");
-				positionElement.html("F");
+				positionElement.addClass("boardBomb");
+				positionElement.html("B");
+				this.gameIsNowOver();
 			}
 			else
 			{
