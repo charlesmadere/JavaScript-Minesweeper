@@ -1,9 +1,23 @@
 var board;
 
 
-function cheatBoard()
+function cheatToggle()
 {
+	if (!board.isGameOver)
+	{
+		board.isCheatEnabled = !board.isCheatEnabled;
 
+		if (board.isCheatEnabled)
+		{
+			$("#cheatToggle").html("Cheat: On");
+		}
+		else
+		{
+			$("#cheatToggle").html("Cheat: Off");
+		}
+
+		board.flush();
+	}
 }
 
 
@@ -25,15 +39,18 @@ function findBoardPosition(coordinate)
 
 function flagToggle()
 {
-	board.areFlagsEnabled = !board.areFlagsEnabled;
+	if (!board.isGameOver)
+	{
+		board.areFlagsEnabled = !board.areFlagsEnabled;
 
-	if (board.areFlagsEnabled)
-	{
-		$("#flagToggle").html("Flags: On");
-	}
-	else
-	{
-		$("#flagToggle").html("Flags: Off");
+		if (board.areFlagsEnabled)
+		{
+			$("#flagToggle").html("Flags: On");
+		}
+		else
+		{
+			$("#flagToggle").html("Flags: Off");
+		}
 	}
 }
 
@@ -67,7 +84,10 @@ function newBoard()
 
 function validateBoard()
 {
+	if (!board.isGameOver)
+	{
 
+	}
 }
 
 
@@ -77,30 +97,51 @@ function Board(xLength, yLength)
 	this.yLength = yLength;
 
 	this.areFlagsEnabled = false;
+	this.isCheatEnabled = false;
+	this.isGameOver = false;
+
+	$("#cheatToggle").html("Cheat: Off");
 
 	this.createPositions();
 	this.placeBombs();
-	this.setPositionValues();
+	this.findPositionValues();
+}
+
+
+Board.prototype.cheatFlush = function(position, positionElement)
+{
+	if (position.hasBomb)
+	{
+		positionElement.addClass("boardBomb");
+		positionElement.html("B");
+	}
+	else
+	{
+		positionElement.html(position.nearbyBombs);
+	}
 }
 
 
 Board.prototype.clickPosition = function(coordinate)
 {
-	var position = this.positions[coordinate.x][coordinate.y];
-
-	if (!position.hasBeenClicked)
+	if (!this.isGameOver && !this.isCheatEnabled)
 	{
-		if (this.areFlagsEnabled)
-		{
-			position.placeFlag();
-		}
-		else
-		{
-			position.setClicked();
-		}
-	}
+		var position = this.positions[coordinate.x][coordinate.y];
 
-	this.flush();
+		if (!position.hasBeenClicked)
+		{
+			if (this.areFlagsEnabled)
+			{
+				position.placeFlag();
+			}
+			else
+			{
+				position.setClicked();
+			}
+		}
+
+		this.flush();
+	}
 }
 
 
@@ -120,6 +161,72 @@ Board.prototype.createPositions = function()
 }
 
 
+Board.prototype.findPositionValues = function()
+{
+	for (var x = 0; x < this.xLength; ++x)
+	{
+		for (var y = 0; y < this.yLength; ++y)
+		{
+			var position = this.positions[x][y];
+			var nearbyBombs = 0;
+
+			if (!position.hasBomb)
+			{
+				if (x + 1 < this.xLength && this.positions[x + 1][y].hasBomb)
+				// check position right for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (x - 1 >= 0 && this.positions[x - 1][y].hasBomb)
+				// check position left for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (y + 1 < this.yLength && this.positions[x][y + 1].hasBomb)
+				// check position above for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (y - 1 >= 0 && this.positions[x][y - 1].hasBomb)
+				// check position below for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (x + 1 < this.xLength && y + 1 < this.yLength && this.positions[x + 1][y + 1].hasBomb)
+				// check position top-right for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (x + 1 < this.xLength && y - 1 >= 0 && this.positions[x + 1][y - 1].hasBomb)
+				// check position bottom-right for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (x - 1 >= 0 && y + 1 < this.yLength && this.positions[x - 1][y + 1].hasBomb)
+				// check position top-left for bomb
+				{
+					++nearbyBombs;
+				}
+
+				if (x - 1 >= 0 && y - 1 >= 0 && this.positions[x - 1][y - 1].hasBomb)
+				// check position bottom-left for bomb
+				{
+					++nearbyBombs;
+				}
+			}
+
+			position.nearbyBombs = nearbyBombs;
+		}
+	}
+}
+
+
 Board.prototype.flush = function()
 {
 	for (var x = 0; x < this.xLength; ++x)
@@ -131,31 +238,29 @@ Board.prototype.flush = function()
 			var positionElement = findBoardPosition(coordinate);
 
 			positionElement.html("");
+			positionElement.removeClass("boardPositionClicked");
+			positionElement.removeClass("boardBomb");
+			positionElement.removeClass("boardFlag");
 
-			if (position.hasBeenClicked)
+			if (this.isCheatEnabled)
 			{
-				positionElement.addClass("boardPositionClicked");
-
-				if (position.hasBomb)
-				{
-					positionElement.addClass("boardBomb");
-					positionElement.html("B");
-				}
-				else
-				{
-					positionElement.html(position.number);
-				}
+				this.cheatFlush(position, positionElement);
 			}
 			else
 			{
-				if (position.hasFlag)
-				{
-					positionElement.addClass("boardFlag");
-					positionElement.html("F");
-				}
+				this.regularFlush(position, positionElement);
 			}
 		}
 	}
+}
+
+
+Board.prototype.gameIsNowOver = function()
+{
+	this.isGameOver = true;
+	this.isCheatEnabled = true;
+	this.flush();
+	gameIsNowOver();
 }
 
 
@@ -177,7 +282,29 @@ Board.prototype.placeBombs = function()
 }
 
 
-Board.prototype.setPositionValues = function()
+Board.prototype.regularFlush = function(position, positionElement)
 {
+	if (position.hasBeenClicked)
+	{
+		positionElement.addClass("boardPositionClicked");
 
+		if (position.hasBomb)
+		{
+			positionElement.addClass("boardBomb");
+			positionElement.html("B");
+			this.gameIsNowOver();
+		}
+		else
+		{
+			positionElement.html(position.nearbyBombs);
+		}
+	}
+	else
+	{
+		if (position.hasFlag)
+		{
+			positionElement.addClass("boardFlag");
+			positionElement.html("F");
+		}
+	}
 }

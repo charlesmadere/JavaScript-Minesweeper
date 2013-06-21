@@ -5,7 +5,7 @@ function Position(x, y)
 	this.hasBeenClicked = false;
 	this.hasBomb = false;
 	this.hasFlag = false;
-	this.number = 0;
+	this.nearbyBombs = 0;
 }
 
 
